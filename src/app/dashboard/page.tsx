@@ -1,3 +1,5 @@
+import RouteMap from '@/components/maps/RouteMap'
+
 export default function DashboardPage() {
   return (
     <div className="h-full">
@@ -80,20 +82,18 @@ export default function DashboardPage() {
           </div>
         </div>
         
-        {/* Map Container - Placeholder */}
+        {/* Map Container - Interactive Map */}
         <div className="flex-1 relative">
-          <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
-            <div className="text-center">
-              <div className="text-6xl mb-4">🗺️</div>
-              <h3 className="text-xl font-semibold text-gray-700 mb-2">
-                Mapa Interactivo
-              </h3>
-              <p className="text-gray-500 max-w-md">
-                El componente de mapa se cargará en el próximo commit.
-                Aquí se visualizarán las rutas optimizadas y la capa de contaminación.
-              </p>
-            </div>
-          </div>
+          <RouteMap
+            onLocationSelect={(location: any) => {
+              console.log('Location selected:', location)
+            }}
+            onRouteCalculated={(route: any) => {
+              console.log('Route calculated:', route)
+            }}
+            showPollutionLayer={true}
+            interactive={true}
+          />
         </div>
       </div>
     </div>
