@@ -5,12 +5,13 @@
 
 import React, { useRef, useState } from 'react'
 import Map, { Marker, Source, Layer, NavigationControl, ScaleControl, ViewStateChangeEvent } from 'react-map-gl'
+import { motion } from 'framer-motion'
 import { useRouteMap } from './logic'
 import styles from './styles.module.css'
 import 'mapbox-gl/dist/mapbox-gl.css'
 
-// Mapbox token público (en producción esto iría en variables de entorno)
-const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || 'pk.eyJ1IjoiZWNvcm91dGUiLCJhIjoiY2x1Z2d6MG1nMGYxeDJpbG5sd3NnYWNjMCJ9.demo_token'
+// Mapbox token público - Token demo que no funciona, necesita reemplazarse
+const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || 'pk.demo_token_replace_me'
 
 interface RouteMapProps {
   onLocationSelect?: (location: { lat: number; lng: number; address?: string }) => void
@@ -87,6 +88,47 @@ export const RouteMap: React.FC<RouteMapProps> = ({
     } else {
       setHoveredPollution(null)
     }
+  }
+
+  // Fallback si no hay token de Mapbox válido
+  if (!MAPBOX_TOKEN || MAPBOX_TOKEN === 'pk.demo_token_replace_me') {
+    return (
+      <div className={`${styles.mapContainer} ${className}`}>
+        <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center">
+          <div className="text-center p-8 bg-white rounded-xl shadow-lg max-w-md">
+            <div className="text-6xl mb-4">🗺️</div>
+            <h3 className="text-xl font-semibold text-gray-800 mb-3">
+              Mapa Interactivo Demo
+            </h3>
+            <p className="text-gray-600 mb-4">
+              Para usar el mapa completo, necesitas configurar un token de Mapbox válido.
+            </p>
+            <div className="space-y-2 text-sm text-gray-500">
+              <p>📍 Simulando: Madrid → Barcelona</p>
+              <p>🛣️ Distancia: ~620 km</p>
+              <p>🌱 CO₂ Ahorrado: ~15.2 kg</p>
+            </div>
+            <div className="mt-6">
+              <motion.button
+                onClick={() => {
+                  const mockRoute = {
+                    id: 'demo_route',
+                    distance: 620,
+                    co2Savings: 15.2
+                  }
+                  onRouteCalculated?.(mockRoute)
+                }}
+                className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                🚀 Simular Ruta Demo
+              </motion.button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (

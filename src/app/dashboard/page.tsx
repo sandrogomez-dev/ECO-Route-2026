@@ -19,6 +19,13 @@ export default function DashboardPage() {
     estimatedTime: 0
   })
 
+  // Función para cargar datos de ejemplo
+  const loadExampleData = () => {
+    setOrigin('Madrid, España')
+    setDestination('Barcelona, España')
+    setVehicleType('electric')
+  }
+
   const handleLocationSelect = useCallback((location: { lat: number; lng: number; address?: string }) => {
     // Si no hay origen, establecer como origen
     if (!origin) {
@@ -66,7 +73,18 @@ export default function DashboardPage() {
     setTimeout(() => {
       // En una aplicación real, aquí harías la llamada a la API
       console.log('Optimizando ruta...', { origin, destination, vehicleType })
-    }, 500)
+      
+      // Crear una ruta mock y actualizar estadísticas
+      const mockRoute = {
+        id: `route_${Date.now()}`,
+        origin: { lat: 40.4168, lng: -3.7038 },
+        destination: { lat: 41.3851, lng: 2.1734 },
+        distance: Math.random() * 500 + 100, // 100-600 km
+        co2Savings: Math.random() * 20 + 5   // 5-25 kg
+      }
+      
+      handleRouteCalculated(mockRoute)
+    }, 2000) // 2 segundos para ver el efecto
   }
 
   const handleClearAll = () => {
@@ -74,6 +92,7 @@ export default function DashboardPage() {
     setDestination('')
     setCurrentRoute(null)
     setStats({ co2Saved: 0, distance: 0, estimatedTime: 0 })
+    setIsOptimizing(false) // Resetear estado de optimización
   }
 
   return (
@@ -88,6 +107,18 @@ export default function DashboardPage() {
                 Optimizador de Rutas
               </h2>
               
+              {/* Botón de datos de ejemplo */}
+              <div className="mb-4">
+                <motion.button
+                  onClick={loadExampleData}
+                  className="w-full bg-blue-50 text-blue-700 py-2 px-4 rounded-md hover:bg-blue-100 transition-colors font-medium text-sm border border-blue-200"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  📍 Cargar Ejemplo: Madrid → Barcelona
+                </motion.button>
+              </div>
+              
               {/* Origin Input */}
               <div className="space-y-4">
                 <div>
@@ -99,7 +130,7 @@ export default function DashboardPage() {
                     value={origin}
                     onChange={(e) => setOrigin(e.target.value)}
                     placeholder="Ingresa dirección de origen..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-500"
                   />
                 </div>
                 
@@ -112,7 +143,7 @@ export default function DashboardPage() {
                     value={destination}
                     onChange={(e) => setDestination(e.target.value)}
                     placeholder="Ingresa dirección de destino..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-500"
                   />
                 </div>
                 
@@ -125,7 +156,7 @@ export default function DashboardPage() {
                     value={vehicleType}
                     onChange={(e) => setVehicleType(e.target.value)}
                     title="Selecciona el tipo de vehículo"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
                   >
                     <option value="electric">Eléctrico</option>
                     <option value="hybrid">Híbrido</option>
@@ -151,6 +182,14 @@ export default function DashboardPage() {
                       'Optimizar Ruta'
                     )}
                   </motion.button>
+                  
+                  {/* Indicador de estado del botón */}
+                  {(!origin || !destination) && (
+                    <div className="text-xs text-gray-500 text-center">
+                      {!origin && !destination ? 'Ingresa origen y destino' :
+                       !origin ? 'Falta origen' : 'Falta destino'}
+                    </div>
+                  )}
                   
                   {(origin || destination || currentRoute) && (
                     <motion.button 
