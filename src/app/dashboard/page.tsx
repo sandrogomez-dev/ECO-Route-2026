@@ -1,3 +1,5 @@
+'use client'
+
 import RouteMap from '@/components/maps/RouteMap'
 
 export default function DashboardPage() {
