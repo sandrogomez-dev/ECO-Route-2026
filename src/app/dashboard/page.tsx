@@ -243,19 +243,19 @@ export default function DashboardPage() {
                 
                 {/* Indicador de tipo de vehículo */}
                 <motion.div 
-                  className="mt-4 p-3 bg-gray-50 rounded-lg"
+                  className="mt-4 p-3 bg-white border border-gray-200 rounded-lg"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Vehículo:</span>
+                    <span className="text-sm font-medium text-gray-700">Vehículo:</span>
                     <div className="flex items-center">
-                      <span className="text-lg mr-1">
+                      <span className="text-lg mr-2">
                         {vehicleType === 'electric' ? '⚡' : 
                          vehicleType === 'hybrid' ? '🔋' : 
                          vehicleType === 'diesel' ? '⛽' : '⛽'}
                       </span>
-                      <span className="text-sm font-medium capitalize">
+                      <span className="text-sm font-semibold text-gray-900 capitalize">
                         {vehicleType === 'electric' ? 'Eléctrico' :
                          vehicleType === 'hybrid' ? 'Híbrido' :
                          vehicleType === 'diesel' ? 'Diesel' : 'Gasolina'}
